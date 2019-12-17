@@ -60,15 +60,15 @@ app.post('/Register', async (request, response) => {
       CompanyCode,
       Address
     });
-    const company = await companyRef.writeTime;
+    companyRef.writeTime;
 
-    const departRef = await db.collection('CompanyMaster').doc(data.CompanyCode)
+    await db.collection('CompanyMaster').doc(data.CompanyCode)
       .collection('DepartmentMaster').add({ Name: EmpMaster.Department });
 
     const empRef = await db.collection('CompanyMaster').doc(data.CompanyCode)
       .collection('EmpMaster').doc(EmpMaster['PSNo']).set(EmpMaster);
 
-    const emp = await empRef.writeTime;
+    empRef.writeTime;
 
     response.json({ success: 'true', message: 'You Have successfully registered' });
 
