@@ -2,7 +2,7 @@
 
 **[Service List]**
 
-**[Login]**
+**[1] Login**
 Service needs to validate the CompanyCode available along with PSNO & correct password.
 ```
 Post
@@ -25,7 +25,7 @@ Response Paramaters
 }
 ```
 
-**[Registration]**
+**[2] Registration**
 Service needs to 
     Create New Company if does not exist
     Create New Department if does not exist
@@ -62,7 +62,7 @@ Response Paramaters
 ```
 
 
-**[GetDepartmentList]**
+**[3] GetDepartmentList**
 Service needs to 
     Get the list of all the available department
 
@@ -86,7 +86,7 @@ Response Paramaters
 
 
 
-**[GetCompanyList]**
+**[4] GetCompanyList**
 Service needs to 
     Get the list of all the available Company from CompanyMaster
 
@@ -109,7 +109,7 @@ Response Paramaters
 ```
 
 
-**[UpdateWishList]**
+**[5] UpdateWishList**
 Service needs to 
     Update/Add the wish list passed, (delete the availabe wishlist of the emp & add the new one's)
 
@@ -136,7 +136,7 @@ Response Paramaters
 
 
 
-**[UpdateProfile]**
+**[6] UpdateProfile**
 Service needs to 
     Update the emp profile
 
@@ -171,7 +171,7 @@ Response Paramaters
 
 
 
-**[Get Recipient Profile]**
+**[7] Get Recipient Profile**
 Service needs to 
     Get the Recipient profile Details 
 
@@ -206,7 +206,7 @@ Response Paramaters
 
 
 
-**[Get Recipient Wishlist]**
+**[8] Get Recipient Wishlist**
 Service needs to 
     Get the Recipient Wishlist Details 
 
@@ -234,7 +234,7 @@ Response Paramaters
 
 
 
-**[GetMySecretSantaProfile]**
+**[9] GetMySecretSantaProfile**
 Service needs to 
     Get the Emp's  SecretSanta Profile Details
 
@@ -268,7 +268,7 @@ Response Paramaters
 
 
 
-**[StartMatching]**
+**[10] StartMatching**
 Service needs to 
     The matching process will be initiated by the admin
 
@@ -297,7 +297,7 @@ Response Paramaters
 
 
 
-**[Get ALL Users]**
+**[11] Get ALL Users**
 Service needs to 
     The matching process will be initiated by the admin
 
@@ -341,7 +341,7 @@ Response Paramaters
 
 
 
-**[Update User(s) Admin Status]**
+**[12] Update User(s) Admin Status**
 Service needs to 
     update the IsAdmin property for the specific user's
 
