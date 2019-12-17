@@ -260,8 +260,119 @@ Response Paramaters
         "Email": "karan.hinduja@lntinfotech.com",
         "FullName": "Karan Hinduja",
         "Mobile": 9920329141,
-        "PSNo": "10663876"
+        "PSNo": "10663876",
+        "IsAdmin":True
   }
+}
+```
+
+
+
+**[StartMatching]**
+Service needs to 
+    The matching process will be initiated by the admin
+
+```
+Post
+(/api/v1/StartMatching)
+```
+Request Paramaters
+```
+{
+  "CompanyCode": "Praxis",
+  "PSNo":'10663876',
+  "Department":[{Name:"DevOps"}, {Name:"SysAdmin"}]
+}
+```
+Response Paramaters
+
+```
+{
+    Success:True | False,
+    Message:''
+}
+```
+
+
+
+
+
+**[Get ALL Users]**
+Service needs to 
+    The matching process will be initiated by the admin
+
+```
+GET
+(/api/v1/GetAllUsers)
+```
+Request Paramaters
+```
+{
+  "CompanyCode": "Praxis",
+  "PSNo":'10663876'
+}
+```
+Response Paramaters
+
+```
+{
+    Success:True | False,
+    Message:'',
+    Data:[
+        {
+            "Department": "DevOps",
+            "Email": "karan.hinduja@lntinfotech.com",
+            "FullName": "Karan Hinduja",
+            "Mobile": 9920329141,
+            "PSNo": "10663876",
+            "IsAdmin":True
+        },
+        {
+            "Department": "DevOps",
+            "Email": "karan.hinduja@lntinfotech.com",
+            "FullName": "Karan Hinduja",
+            "Mobile": 9920329141,
+            "PSNo": "10663876",
+            "IsAdmin":False
+        }
+        ]
+}
+```
+
+
+
+**[Update User(s) Admin Status]**
+Service needs to 
+    update the IsAdmin property for the specific user's
+
+```
+POST
+(/api/v1/UpdateUserAdminStatus)
+```
+Request Paramaters
+```
+{
+  "CompanyCode": "Praxis",
+  "Data":[
+      {
+        "PSNo":'10663876',
+        "IsAdmin":True
+      },
+      {
+        "PSNo":'10663876',
+        "IsAdmin":True
+      },
+  ]
+  
+}
+```
+Response Paramaters
+
+```
+{
+    Success:True | False,
+    Message:'',
+    
 }
 ```
 
