@@ -168,3 +168,101 @@ Response Paramaters
 ```
 
 
+
+
+
+**[Get Recipient Profile]**
+Service needs to 
+    Get the Recipient profile Details 
+
+```
+Get
+(/api/v1/GetRecipientProfile)
+```
+Request Paramaters
+```
+{
+  "CompanyCode": "Praxis",
+  "PSNo":'10663876'
+}
+```
+Response Paramaters
+
+```
+{
+    Success:True | False,
+    Message:'',
+    Data:{
+        "Department": "DevOps",
+        "Email": "karan.hinduja@lntinfotech.com",
+        "FullName": "Karan Hinduja",
+        "Mobile": 9920329141,
+        "PSNo": "10663876"
+  }
+}
+```
+
+
+
+
+
+**[Get Recipient Wishlist]**
+Service needs to 
+    Get the Recipient Wishlist Details 
+
+```
+Get
+(/api/v1/GetRecipientProfile)
+```
+Request Paramaters
+```
+{
+  "CompanyCode": "Praxis",
+  "PSNo":'10663876'
+}
+```
+Response Paramaters
+
+```
+{
+    Success:True | False,
+    Message:'',
+    Data:[{Description:''}, {Description:''}, {Description:''}]
+}
+```
+
+
+
+
+**[GetMySecretSantaProfile]**
+Service needs to 
+    Get the Emp's  SecretSanta Profile Details
+
+```
+Get
+(/api/v1/GetMySecretSantaProfile)
+```
+Request Paramaters
+```
+{
+  "CompanyCode": "Praxis",
+  "PSNo":'10663876'
+}
+```
+Response Paramaters
+
+```
+{
+    Success:True | False,
+    Message:'',
+    Data:{
+        "Department": "DevOps",
+        "Email": "karan.hinduja@lntinfotech.com",
+        "FullName": "Karan Hinduja",
+        "Mobile": 9920329141,
+        "PSNo": "10663876"
+  }
+}
+```
+
+
