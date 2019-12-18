@@ -72,7 +72,9 @@ Get
 ```
 Request Paramaters
 ```
----No paramater
+{
+    CompanyCode:'LTI'
+}
 ```
 Response Paramaters
 
