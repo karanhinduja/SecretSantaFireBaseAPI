@@ -5,6 +5,7 @@ import * as express from 'express';
 import * as bodyParser from "body-parser";
 import * as cors from "cors";
 import * as serviceAccount from './permissions.json';
+// import * as firebase from 'firebase/database';
 
 const params = {
   type: serviceAccount.type,
@@ -25,6 +26,9 @@ functions.config().firebase = {
 };
 admin.initializeApp(functions.config().firebase);
 const db = admin.firestore();
+
+
+// const database = firebase.database();
 
 const app = express();
 const main = express();
@@ -185,9 +189,10 @@ app.post('/UpdateEmpWishList', async (req, res) => {
   try {
     console.log(req.body.WishList);
     const document = db.collection('CompanyMaster/' + req.body.CompanyCode + '/EmpMaster/' + req.body.PSNo + '/wishlist').doc('wishlist');
-    await document.create(req.body.WishList);
+    await document.set(req.body.WishList);
     return res.status(200).send({ Success: true, Message: 'wishlist created' });
   } catch (error) {
+    console.log(error)
     return res.status(500).send(error);
   }
 });
@@ -199,12 +204,27 @@ app.post('/GetEmpProfile', async (req, res) => {
     let profileData = profile.data();
     if (profileData) {
       delete profileData.Password;
-      return res.status(200).send({ Success: true, Message: 'found', data: profileData});
+      return res.status(200).send({ Success: true, Message: 'found', data: profileData });
     } else {
       return res.status(200).send({ Success: false, Message: 'not found', data: {} });
     }
   } catch (error) {
     console.log(error);
+    return res.status(500).send(error);
+  }
+});
+
+app.post('/UpdateEmpProfile', async (req, res) => {
+  console.log(req.body);
+  try {
+    const document = db.collection('CompanyMaster/' + req.body.CompanyCode + '/EmpMaster').doc('/' + req.body.PSNo + '/');
+
+    if (document !== undefined) {
+      await (await document.update(req.body)).writeTime;
+      return res.status(200).send({ Success: true, Message: 'updated' });
+    }
+    return res.status(200).send({ Success: false, Message: 'not updated' });
+  } catch (error) {
     return res.status(500).send(error);
   }
 });
