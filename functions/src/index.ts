@@ -39,29 +39,29 @@ main.use(bodyParser.json());
 export const webApi = functions.https.onRequest(main);
 app.use(cors({ origin: true }));
 
-app.get('/warm', async (req, res) => {
+// app.get('/warm', async (req, res) => {
 
-  const empRef = db.collection('CompanyMaster').doc('LTI').collection('EmpMaster').where('Department', '==', 'DevOps');
-  var data: any = [];
-  await empRef.get()
-    .then(function (querySnapshot) {
-      querySnapshot.forEach(function (doc) {
-        // doc.data() is never undefined for query doc snapshots
-        data.push({ docID: doc.id, Emp: doc.data() });
-        console.log(doc.id, " => ", doc.data());
+//   const empRef = db.collection('CompanyMaster').doc('LTI').collection('EmpMaster').where('Department', '==', 'DevOps');
+//   let data: any = [];
+//   await empRef.get()
+//     .then(function (querySnapshot) {
+//       querySnapshot.forEach(function (doc) {
+//         // doc.data() is never undefined for query doc snapshots
+//         data.push({ docID: doc.id, Emp: doc.data() });
+//         console.log(doc.id, " => ", doc.data());
 
-      });
-    })
-    .catch(function (error) {
-      console.log("Error getting documents: ", error);
-    });
-  res.send(data);
+//       });
+//     })
+//     .catch(function (error) {
+//       console.log("Error getting documents: ", error);
+//     });
+//   res.send(data);
 
-})
+// })
 
-app.get('/warmTo', (req, res) => {
-  res.send('Calentando para la pelea');
-})
+// app.get('/warmTo', (req, res) => {
+//   res.send('Calentando para la pelea');
+// })
 
 
 app.post('/Login', async (request, response) => {
