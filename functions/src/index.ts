@@ -26,6 +26,7 @@ functions.config().firebase = {
 };
 admin.initializeApp(functions.config().firebase);
 const db = admin.firestore();
+// const database = admin.database().ref();
 
 
 // const database = firebase.database();
@@ -86,7 +87,7 @@ app.post('/Register', async (request, response) => {
 
   try {
     const query = db.collection('CompanyMaster');
-    var isExist = false;
+    let isExist = false;
     await query.get().then(querySnapshot => {
       let docs = querySnapshot.docs;
       for (let doc of docs) {
@@ -99,7 +100,7 @@ app.post('/Register', async (request, response) => {
     }).catch((err) => { console.error(err); });
 
     const document = db.collection('CompanyMaster').doc('/' + request.body.CompanyCode + '/');
-    var userData = request.body.EmpMaster;
+    let userData = request.body.EmpMaster;
     userData.SecretSanta = '';
     if (isExist) {
       userData.IsAdmin = false;
@@ -229,6 +230,166 @@ app.post('/UpdateEmpProfile', async (req, res) => {
   }
 });
 
+
+app.post('/StartMatching', async (req, res) => {
+  try {
+    db.collection('CompanyMaster/' + req.body.CompanyCode + '/EmpMaster')
+      .where('Department', 'in', req.body.Department.split(',')).get()
+      .then(snapshot => {
+        if (snapshot.empty) {
+          console.log('No matching documents.');
+          return;
+        }
+        let empData: any = [];
+
+        let i = 1;
+        snapshot.forEach(doc => {
+          empData.push({ ID: i, DocID: doc.id, Data: doc.data() });
+          i++;
+          // console.log(doc.id, '=>', doc.data());
+        });
+
+        let tempList: any = empData.filter((item: any, index: number, array: any) => {
+          return (!item.Data.SecretSanta);
+        }).map((item: any) => item.Data.PSNo);
+
+        let previousMapped: string = ''
+        let batch = db.batch();
+        for (let j = 0, k = empData.length; j < k; j++) {
+
+          if (!empData[j].Data.SecretSanta) {
+            let randamNo = Math.floor(Math.random() * Math.floor(tempList.length));
+            while (empData[j].DocID === tempList[randamNo] && tempList.length > 1) {
+              randamNo = Math.floor(Math.random() * Math.floor(tempList.length));
+            }
+
+            if (empData[j].DocID !== tempList[randamNo]) {
+              empData[j].Data.SecretSanta = tempList[randamNo];
+              console.log('Value:- ', tempList[randamNo]);
+              console.log('randamNo:- ', randamNo);
+            }
+            else {
+              empData[j].Data.SecretSanta = previousMapped;
+              empData[j - 1].Data.SecretSanta = tempList[randamNo];
+
+              let tref1 = db.collection('CompanyMaster/' + req.body.CompanyCode + '/EmpMaster').doc(empData[j - 1].DocID);
+              batch.update(tref1, { SecretSanta: empData[j - 1].Data.SecretSanta });
+
+              let tref2 = db.collection('CompanyMaster/' + req.body.CompanyCode + '/EmpMaster').doc(empData[j - 1].Data.SecretSanta);
+              batch.update(tref2, { Recipient: empData[j - 1].Data.PSNo });
+            }
+
+            let ref1 = db.collection('CompanyMaster/' + req.body.CompanyCode + '/EmpMaster').doc(empData[j].DocID);
+            batch.update(ref1, { SecretSanta: empData[j].Data.SecretSanta });
+
+            let ref2 = db.collection('CompanyMaster/' + req.body.CompanyCode + '/EmpMaster').doc(empData[j].Data.SecretSanta);
+            batch.update(ref2, { Recipient: empData[j].Data.PSNo });
+
+            previousMapped = tempList[randamNo];
+            tempList.splice(randamNo, 1);
+            console.log('Loop:- ', j);
+            console.log('ref1:- ', ref1);
+            console.log('ref1:- ', ref2);
+          }
+        }
+        batch.commit().then(function () {
+          // ...
+          console.log('Task done');
+        });
+        console.log(empData);
+
+      }).catch(err => {
+        console.log('Error getting documents', err);
+      });
+
+    // let response: any = [], allocated = [];
+    // await query.get().then(querySnapshot => {
+    //   let docs = querySnapshot.docs;
+    //   for (let doc of docs) {
+    //     let selectedItem = {
+    //       Id: doc.id,
+    //       Name: doc.data().FullName,
+    //       SecretSanta: doc.data().SecretSanta
+    //     }
+    //     response.push(selectedItem);
+    //   }
+    // }).catch((err) => { console.error(err); });
+
+    // for (let i = response.length - 1; i >= 0; i--) {
+    //   if (response[i].SecretSanta !== undefined && response[i].SecretSanta !== "") {
+    //     allocated.push(response[i].SecretSanta);
+    //   }
+    // }
+
+    // for (let j = 0; j <= response.length - 1; j++) {
+    //   //console.log(response[j].id +" ---- "+ response[j].santa+" ----> "+j);
+    //   while (response[j].SecretSanta === "") {
+    //     if (j === response.length - 1 && allocated.indexOf(response[j].id) === -1) {
+    //       response[j].SecretSanta = response[j - 1].SecretSanta;
+    //       response[j - 1].SecretSanta = String(response[j].id);
+    //       allocated.push(response[j].id);
+    //       const document = query.doc('/' + response[j - 1].id + '/');
+    //       document.update({
+    //         santa: response[j - 1].santa
+    //       });
+    //     } else {
+    //       let rand = Math.floor(Math.random() * response.length);
+    //       while (rand === j) {
+    //         rand = Math.floor(Math.random() * response.length);
+    //       }
+    //       if (allocated.indexOf(response[rand].id) === -1) {
+    //         response[j].santa = response[rand].id;
+    //         allocated.push(response[j].santa);
+    //       }
+    //     }
+    //   }
+    //   const document = db.collection('CompanyMaster/' + req.body.CompanyCode + '/EmpMaster').doc('/' + response[j].id + '/');
+    //   if (response[j].santa === undefined) {
+    //     document.set({
+    //       santa: response[j].santa
+    //     });
+    //   } else {
+    //     document.update({
+    //       santa: response[j].santa
+    //     });
+    //   }
+
+    // }
+    return res.status(200).send('allocated');
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send(error);
+  }
+});
+
+
+app.post('/ResetMatching', async (req, res) => {
+  try {
+    db.collection('CompanyMaster/' + req.body.CompanyCode + '/EmpMaster')
+      .where('Department', 'in', req.body.Department.split(',')).get()
+      .then(snapshot => {
+        if (snapshot.empty) {
+          console.log('No matching documents.');
+          return;
+        }
+        let batch = db.batch();
+        snapshot.forEach(doc => {
+          let ref1 = db.collection('CompanyMaster/' + req.body.CompanyCode + '/EmpMaster').doc(doc.id);
+          batch.update(ref1, { SecretSanta: '', Recipient: '' });
+        });
+        batch.commit().then(function () {
+          // ...
+          console.log('Task done');
+        });
+      }).catch(err => {
+        console.log('Error getting documents', err);
+      });
+    return res.status(200).send('allocated');
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send(error);
+  }
+});
 
 // app.post('/Register', async (request, response) => {
 
